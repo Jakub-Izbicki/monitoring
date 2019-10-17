@@ -4,7 +4,7 @@ import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEven
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.PriorityOrdered;
 
-public class LoggingPropertiesConfig implements ApplicationListener<ApplicationEnvironmentPreparedEvent>,
+public class LoggingPropertiesListener implements ApplicationListener<ApplicationEnvironmentPreparedEvent>,
     PriorityOrdered {
 
   private static final String LOGGING_PROP = "common.file";

@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>izbicki.jakub</groupId>
   <artifactId>logging-autoconfiguration</artifactId>
-  <version>0.0.5-SNAPSHOT</version>
+  <version>0.1.2-SNAPSHOT</version>
   <name>logging-autoconfiguration</name>
   <description>Logging autoconfiguration for Spring Boot applications</description>
 
