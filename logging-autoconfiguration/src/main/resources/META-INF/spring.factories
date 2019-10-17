@@ -1,0 +1,1 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=izbicki.jakub.loggingautoconfiguration.incoming.IncomingLoggingInterceptorConfig, izbicki.jakub.loggingautoconfiguration.outcoming.OutcomingLoggingInterceptorConfig
