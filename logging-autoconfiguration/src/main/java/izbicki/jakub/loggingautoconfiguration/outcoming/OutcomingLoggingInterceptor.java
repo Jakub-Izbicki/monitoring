@@ -1,6 +1,6 @@
 package izbicki.jakub.loggingautoconfiguration.outcoming;
 
-import izbicki.jakub.loggingautoconfiguration.logging.LoggingUtils;
+import izbicki.jakub.loggingautoconfiguration.common.LoggingUtils;
 import java.io.IOException;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;

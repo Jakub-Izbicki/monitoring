@@ -11,8 +11,6 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties("service")
 public class ServiceConfig {
 
-  private String name;
-
   private int maxCalculationTimeMs;
 
   private String[] availableNodes;

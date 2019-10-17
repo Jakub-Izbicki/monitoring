@@ -1,4 +1,4 @@
-package izbicki.jakub.loggingautoconfiguration.logging;
+package izbicki.jakub.loggingautoconfiguration.common;
 
 import java.io.IOException;
 import java.util.Date;
@@ -49,7 +49,7 @@ public class LoggingUtils {
 
   public static void log(HttpRequest request) {
     log.info("- - - - - - - - - -");
-    log.info("type: request");
+    log.info("type: " + HttpMessageType.OUTCOMING_REQUEST.name());
     log.info("destination: " + request.getURI().toString());
     log.info("correlationId: " + request.getHeaders().get(CORRELATION_ID).get(0));
     log.info("method: " + request.getMethod().name());
@@ -58,6 +58,7 @@ public class LoggingUtils {
 
   public static void log(ClientHttpResponse response) throws IOException {
     log.info("- - - - - - - - - -");
+    log.info("type: " + HttpMessageType.OUTCOMING_RESPONSE.name());
     log.info("correlationId: " + response.getHeaders().get(CORRELATION_ID).get(0));
     log.info("time: " + new Date().toString());
     log.info("responseCode: " + response.getStatusCode().toString());
