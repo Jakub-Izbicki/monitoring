@@ -9,12 +9,10 @@ import java.util.Optional;
 import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMessage;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpResponse;
 
-@Slf4j
 public class LoggingUtils {
 
   private final LoggingContext context;
@@ -26,43 +24,45 @@ public class LoggingUtils {
   public void log(HttpRequest request) {
     setCorrelationIdIfMissing(request);
 
-    log.info("- - - - - - - - - -");
-    log.info("type: " + HttpMessageType.OUTCOMING_REQUEST.name());
-    log.info("destination: " + request.getURI().toString());
-    log.info("correlationId: " + request.getHeaders().get(CORRELATION_ID.getName()).get(0));
-    log.info("method: " + request.getMethod().name());
-    log.info("time: " + new Date().toString());
+    Logger.log(context.getServiceName(),
+        HttpMessageType.OUTCOMING_REQUEST,
+        Optional.of(request.getURI().toString()),
+        Optional.of(context.getCorrelationId()),
+        Optional.of(request.getMethod().name()),
+        Optional.empty());
   }
 
   public void log(ClientHttpResponse response) throws IOException {
     setCorrelationIdIfMissing(response);
 
-    log.info("- - - - - - - - - -");
-    log.info("type: " + HttpMessageType.OUTCOMING_RESPONSE.name());
-    log.info("correlationId: " + response.getHeaders().get(CORRELATION_ID.getName()).get(0));
-    log.info("time: " + new Date().toString());
-    log.info("responseCode: " + response.getStatusCode().toString());
+    Logger.log(context.getServiceName(),
+        HttpMessageType.OUTCOMING_RESPONSE,
+        Optional.empty(),
+        Optional.of(context.getCorrelationId()),
+        Optional.empty(),
+        Optional.of(response.getStatusCode().toString()));
   }
 
   public void log(HttpServletRequest request) {
     setCorrelationIdIfMissing(request);
 
-    log.info("- - - - - - - - - -");
-    log.info("type: " + HttpMessageType.INCOMING_REQUEST.name());
-    log.info("destination: " + request.getRequestURI());
-    log.info("correlationId: " + context.getCorrelationId());
-    log.info("method: " + request.getMethod());
-    log.info("time: " + new Date().toString());
+    Logger.log(context.getServiceName(),
+        HttpMessageType.INCOMING_REQUEST,
+        Optional.of(request.getRequestURI()),
+        Optional.of(context.getCorrelationId()),
+        Optional.of(request.getMethod()),
+        Optional.empty());
   }
 
   public void log(HttpServletResponse response) {
     setCorrelationIdIfMissing(response);
 
-    log.info("- - - - - - - - - -");
-    log.info("type: " + HttpMessageType.INCOMING_RESPONSE.name());
-    log.info("correlationId: " + context.getCorrelationId());
-    log.info("time: " + new Date().toString());
-    log.info("responseCode: " + response.getStatus());
+    Logger.log(context.getServiceName(),
+        HttpMessageType.INCOMING_RESPONSE,
+        Optional.empty(),
+        Optional.of(context.getCorrelationId()),
+        Optional.empty(),
+        Optional.of(String.valueOf(response.getStatus())));
   }
 
   private void setCorrelationIdIfMissing(HttpMessage httpMessage) {

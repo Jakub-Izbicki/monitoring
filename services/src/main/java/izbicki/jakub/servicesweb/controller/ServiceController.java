@@ -28,8 +28,8 @@ public class ServiceController {
   private RestTemplate restTemplate;
 
   @GetMapping
-  public String getGreeting(HttpServletRequest request, HttpServletResponse response) throws InterruptedException {
-    calculateLogic();
+  public String getGreeting(HttpServletRequest request) throws InterruptedException {
+    simulateCalculateLogic();
 
     if (!isLastCall(request)) {
       chainCall(request);
@@ -38,10 +38,8 @@ public class ServiceController {
     return GREETING;
   }
 
-  private void calculateLogic() throws InterruptedException {
-    System.out.println("Max Time = " + config.getMaxCalculationTimeMs());
+  private void simulateCalculateLogic() throws InterruptedException {
     long time = ThreadLocalRandom.current().nextInt(config.getMaxCalculationTimeMs());
-    System.out.println("Time = " + time);
     Thread.sleep(time);
   }
 

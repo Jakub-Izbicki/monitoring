@@ -4,12 +4,12 @@ import static izbicki.jakub.loggingautoconfiguration.common.LoggingConst.CORRELA
 
 import java.util.HashMap;
 import java.util.Map;
-import org.springframework.stereotype.Component;
-import org.springframework.web.context.annotation.RequestScope;
+import org.springframework.beans.factory.annotation.Value;
 
-@RequestScope
-@Component
 public class LoggingContext {
+
+  @Value("${spring.application.name}")
+  private String serviceName;
 
   private Map<String, String> props = new HashMap<>();
 
@@ -23,5 +23,9 @@ public class LoggingContext {
 
   public void setCorrelationId(String value) {
     props.put(CORRELATION_ID.getName(), value);
+  }
+
+  public String getServiceName() {
+    return serviceName;
   }
 }
