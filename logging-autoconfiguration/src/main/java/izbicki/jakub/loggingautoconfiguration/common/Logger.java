@@ -19,14 +19,14 @@ public class Logger {
     String logMessage = String.format("\n"
             + "%s \n"
             + "[%s] "
-            + "serviceName: %s "
-            + "type: %s "
-            + "contextPath: %s "
-            + "correlationId: %s "
-            + "method: %s "
-            + "time: %s "
-            + "timestamp: %s "
-            + "responseCode: %s",
+            + "serviceName: [%s] "
+            + "type: [%s] "
+            + "contextPath: [%s] "
+            + "correlationId: [%s] "
+            + "method: [%s] "
+            + "time: [%s] "
+            + "timestamp: [%s] "
+            + "responseCode: [%s]",
         getSeparator(type),
         LOG_TAG,
         serviceName,
