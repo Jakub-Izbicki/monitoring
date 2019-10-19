@@ -3,15 +3,19 @@ package izbicki.jakub.loggingautoconfiguration.common;
 import static izbicki.jakub.loggingautoconfiguration.common.LoggingConst.CORRELATION_ID;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.io.IOUtils;
 import org.springframework.http.HttpMessage;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.util.StreamUtils;
 
 public class LoggingUtils {
 
@@ -29,7 +33,8 @@ public class LoggingUtils {
         Optional.of(request.getRequestURI()),
         Optional.of(request.getMethod()),
         Optional.empty(),
-        Optional.empty());
+        Optional.empty(),
+        getBody(request));
   }
 
   public void log(HttpServletResponse response) {
@@ -40,10 +45,11 @@ public class LoggingUtils {
         Optional.empty(),
         Optional.empty(),
         Optional.of(context.getResponseTime()),
-        Optional.of(String.valueOf(response.getStatus())));
+        Optional.of(String.valueOf(response.getStatus())),
+        Optional.empty());
   }
 
-  public void log(HttpRequest request) {
+  public void log(HttpRequest request, byte[] body) {
     setCorrelationIdIfMissing(request);
 
     Logger.log(context,
@@ -51,7 +57,8 @@ public class LoggingUtils {
         Optional.of(request.getURI().toString()),
         Optional.of(request.getMethod().name()),
         Optional.empty(),
-        Optional.empty());
+        Optional.empty(),
+        getBody(body));
   }
 
   public void log(ClientHttpResponse response) throws IOException {
@@ -62,7 +69,8 @@ public class LoggingUtils {
         Optional.empty(),
         Optional.empty(),
         Optional.empty(),
-        Optional.of(response.getStatusCode().toString()));
+        Optional.of(response.getStatusCode().toString()),
+        getBody(response));
   }
 
   private void setCorrelationIdIfMissing(HttpMessage httpMessage) {
@@ -146,5 +154,26 @@ public class LoggingUtils {
     long outgoingRequestsTimeTotalMs = context.getSubtractionRequestTime();
 
     context.setResponseTime(end - start - outgoingRequestsTimeTotalMs);
+  }
+
+  private Optional<String> getBody(HttpServletRequest request) {
+    try {
+      return Optional.ofNullable(IOUtils.toString(request.getReader()));
+    } catch (IOException e) {
+      return Optional.empty();
+    }
+  }
+
+  private Optional<String> getBody(byte[] body) {
+    return Optional.ofNullable(body)
+        .map(bytes -> new String(body, StandardCharsets.UTF_8));
+  }
+
+  private Optional<String> getBody(ClientHttpResponse response) {
+    try {
+      return Optional.of(StreamUtils.copyToString(response.getBody(), Charset.defaultCharset()));
+    } catch (IOException e) {
+      return Optional.empty();
+    }
   }
 }

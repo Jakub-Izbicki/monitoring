@@ -12,7 +12,7 @@ public class Logger {
   private static final String LOG_TAG = "autoconfigured-logging";
 
   static void log(LoggingContext context, HttpMessageType type, Optional<String> contextPath, Optional<String> method,
-      Optional<String> responseTime, Optional<String> responseCode) {
+      Optional<String> responseTime, Optional<String> responseCode, Optional<String> body) {
 
     Date now = new Date();
 
@@ -26,7 +26,8 @@ public class Logger {
             + "method: [%s] "
             + "timestamp: [%s] "
             + "responseTime: [%s] "
-            + "responseCode: [%s]",
+            + "responseCode: [%s]"
+            + "body: [%s]",
         getSeparator(type),
         LOG_TAG,
         context.getServiceName(),
@@ -36,7 +37,8 @@ public class Logger {
         get(method),
         now.getTime(),
         get(responseTime),
-        get(responseCode));
+        get(responseCode),
+        get(body));
 
     Logger.log.info(logMessage);
   }

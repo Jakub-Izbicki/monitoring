@@ -3,6 +3,7 @@ package izbicki.jakub.loggingautoconfiguration.outcoming;
 import izbicki.jakub.loggingautoconfiguration.common.LoggingContext;
 import izbicki.jakub.loggingautoconfiguration.common.LoggingUtils;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
@@ -21,7 +22,7 @@ public class OutcomingLoggingInterceptor implements ClientHttpRequestInterceptor
   public ClientHttpResponse intercept(HttpRequest request, byte[] body,
       ClientHttpRequestExecution execution) throws IOException {
     long outgoingRequestStart = new Date().getTime();
-    loggingUtils.log(request);
+    loggingUtils.log(request, body);
 
     ClientHttpResponse response = execution.execute(request, body);
 
