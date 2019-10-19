@@ -10,6 +10,7 @@ public class Logger {
   private static final String EMPTY = "";
 
   private static final String LOG_TAG = "autoconfigured-logging";
+  private static final int RESPONSE_CODE_SIZE = 3;
 
   static void log(LoggingContext context, HttpMessageType type, Optional<String> contextPath, Optional<String> method,
       Optional<String> responseTime, Optional<String> responseCode, Optional<String> body) {
@@ -26,7 +27,7 @@ public class Logger {
             + "method: [%s] "
             + "timestamp: [%s] "
             + "responseTime: [%s] "
-            + "responseCode: [%s]"
+            + "responseCode: [%s] "
             + "body: [%s]",
         getSeparator(type),
         LOG_TAG,
@@ -37,7 +38,7 @@ public class Logger {
         get(method),
         now.getTime(),
         get(responseTime),
-        get(responseCode),
+        getResponseCode(responseCode),
         get(body));
 
     Logger.log.info(logMessage);
@@ -60,5 +61,11 @@ public class Logger {
 
   private static String get(Optional<String> optional) {
     return optional.orElse(EMPTY);
+  }
+
+  private static String getResponseCode(Optional<String> responseCode) {
+    return responseCode
+        .map(code -> code.length() > RESPONSE_CODE_SIZE ? code.substring(0, RESPONSE_CODE_SIZE) : code)
+        .orElse(EMPTY);
   }
 }
