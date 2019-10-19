@@ -13,5 +13,7 @@ public class ServiceConfig {
 
   private int maxCalculationTimeMs;
 
+  private int percentageChanceOfFailure;
+
   private String[] availableNodes;
 }

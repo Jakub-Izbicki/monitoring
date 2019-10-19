@@ -1,6 +1,7 @@
 package izbicki.jakub.servicesweb.controller;
 
 import izbicki.jakub.servicesweb.config.ServiceConfig;
+import izbicki.jakub.servicesweb.exception.ServiceException;
 import java.util.concurrent.ThreadLocalRandom;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,6 +22,8 @@ public class ServiceController {
 
   private static final int LAST_CALL = 0;
 
+  private static final int PERCENTAGE = 100;
+
   @Autowired
   private ServiceConfig config;
 
@@ -30,6 +33,10 @@ public class ServiceController {
   @GetMapping
   public String getGreeting(HttpServletRequest request) throws InterruptedException {
     simulateCalculateLogic();
+
+    if (shouldFailCall()) {
+      throw new ServiceException();
+    }
 
     if (!isLastCall(request)) {
       chainCall(request);
@@ -41,6 +48,10 @@ public class ServiceController {
   private void simulateCalculateLogic() throws InterruptedException {
     long time = ThreadLocalRandom.current().nextInt(config.getMaxCalculationTimeMs());
     Thread.sleep(time);
+  }
+
+  private boolean shouldFailCall() {
+    return Math.random() * PERCENTAGE < config.getPercentageChanceOfFailure();
   }
 
   private boolean isLastCall(HttpServletRequest request) {
