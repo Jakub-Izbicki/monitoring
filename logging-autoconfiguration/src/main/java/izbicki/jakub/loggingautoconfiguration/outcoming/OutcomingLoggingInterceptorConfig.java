@@ -7,7 +7,10 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.client.BufferingClientHttpRequestFactory;
+import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
@@ -18,7 +21,9 @@ public class OutcomingLoggingInterceptorConfig {
   @Bean
   @ConditionalOnBean(LoggingContext.class)
   public RestTemplate restTemplate(LoggingContext context) {
-    RestTemplate restTemplate = new RestTemplate();
+    ClientHttpRequestFactory factory = new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory());
+
+    RestTemplate restTemplate = new RestTemplate(factory);
     List<ClientHttpRequestInterceptor> interceptors = restTemplate.getInterceptors();
 
     if (CollectionUtils.isEmpty(interceptors)) {
