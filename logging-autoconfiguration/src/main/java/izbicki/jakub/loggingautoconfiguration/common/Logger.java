@@ -24,7 +24,6 @@ public class Logger {
             + "contextPath: [%s] "
             + "correlationId: [%s] "
             + "method: [%s] "
-            + "time: [%s] "
             + "timestamp: [%s] "
             + "responseCode: [%s]",
         getSeparator(type),
@@ -34,7 +33,6 @@ public class Logger {
         get(contextPath),
         get(correlationId),
         get(method),
-        now.toString(),
         now.getTime(),
         get(responseCode));
 

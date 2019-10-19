@@ -1,7 +1,6 @@
 filebeat.inputs:
 - type: log
   paths:
-    # - /Users/jakub.izbicki/Projects/monitoring/elastic/logstash-tutorial.log
     - /Users/jakub.izbicki/Projects/monitoring/services/app.log
 output.logstash:
   hosts: ["localhost:5044"]
