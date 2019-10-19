@@ -17,6 +17,7 @@ public class IncomingLoggingInterceptor implements HandlerInterceptor {
 
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+    loggingUtils.setRequestStart();
     loggingUtils.log(request);
     return true;
   }
@@ -24,6 +25,7 @@ public class IncomingLoggingInterceptor implements HandlerInterceptor {
   @Override
   public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
       ModelAndView modelAndView) {
+    loggingUtils.setRequestStop();
     loggingUtils.log(response);
   }
 }

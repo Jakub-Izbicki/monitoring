@@ -21,48 +21,48 @@ public class LoggingUtils {
     this.context = context;
   }
 
-  public void log(HttpRequest request) {
-    setCorrelationIdIfMissing(request);
-
-    Logger.log(context.getServiceName(),
-        HttpMessageType.OUTCOMING_REQUEST,
-        Optional.of(request.getURI().toString()),
-        Optional.of(context.getCorrelationId()),
-        Optional.of(request.getMethod().name()),
-        Optional.empty());
-  }
-
-  public void log(ClientHttpResponse response) throws IOException {
-    setCorrelationIdIfMissing(response);
-
-    Logger.log(context.getServiceName(),
-        HttpMessageType.OUTCOMING_RESPONSE,
-        Optional.empty(),
-        Optional.of(context.getCorrelationId()),
-        Optional.empty(),
-        Optional.of(response.getStatusCode().toString()));
-  }
-
   public void log(HttpServletRequest request) {
     setCorrelationIdIfMissing(request);
 
-    Logger.log(context.getServiceName(),
+    Logger.log(context,
         HttpMessageType.INCOMING_REQUEST,
         Optional.of(request.getRequestURI()),
-        Optional.of(context.getCorrelationId()),
         Optional.of(request.getMethod()),
+        Optional.empty(),
         Optional.empty());
   }
 
   public void log(HttpServletResponse response) {
     setCorrelationIdIfMissing(response);
 
-    Logger.log(context.getServiceName(),
+    Logger.log(context,
         HttpMessageType.INCOMING_RESPONSE,
         Optional.empty(),
-        Optional.of(context.getCorrelationId()),
         Optional.empty(),
+        Optional.of(context.getResponseTime()),
         Optional.of(String.valueOf(response.getStatus())));
+  }
+
+  public void log(HttpRequest request) {
+    setCorrelationIdIfMissing(request);
+
+    Logger.log(context,
+        HttpMessageType.OUTCOMING_REQUEST,
+        Optional.of(request.getURI().toString()),
+        Optional.of(request.getMethod().name()),
+        Optional.empty(),
+        Optional.empty());
+  }
+
+  public void log(ClientHttpResponse response) throws IOException {
+    setCorrelationIdIfMissing(response);
+
+    Logger.log(context,
+        HttpMessageType.OUTCOMING_RESPONSE,
+        Optional.empty(),
+        Optional.empty(),
+        Optional.empty(),
+        Optional.of(response.getStatusCode().toString()));
   }
 
   private void setCorrelationIdIfMissing(HttpMessage httpMessage) {
@@ -129,5 +129,22 @@ public class LoggingUtils {
     }
 
     return getCorrelationIdFromContext();
+  }
+
+  public void setRequestStart() {
+    context.setRequestStartTime(new Date().getTime());
+  }
+
+  public void subtractFromRequestTime(long subtractMs) {
+    long subtractionRequestTime = context.getSubtractionRequestTime();
+    context.setSubtractionRequestTime(subtractionRequestTime + subtractMs);
+  }
+
+  public void setRequestStop() {
+    long end = new Date().getTime();
+    long start = context.getRequestStartTime();
+    long outgoingRequestsTimeTotalMs = context.getSubtractionRequestTime();
+
+    context.setResponseTime(end - start - outgoingRequestsTimeTotalMs);
   }
 }

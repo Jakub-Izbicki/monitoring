@@ -11,8 +11,8 @@ public class Logger {
 
   private static final String LOG_TAG = "autoconfigured-logging";
 
-  static void log(String serviceName, HttpMessageType type, Optional<String> contextPath,
-      Optional<String> correlationId, Optional<String> method, Optional<String> responseCode) {
+  static void log(LoggingContext context, HttpMessageType type, Optional<String> contextPath, Optional<String> method,
+      Optional<String> responseTime, Optional<String> responseCode) {
 
     Date now = new Date();
 
@@ -25,15 +25,17 @@ public class Logger {
             + "correlationId: [%s] "
             + "method: [%s] "
             + "timestamp: [%s] "
+            + "responseTime: [%s] "
             + "responseCode: [%s]",
         getSeparator(type),
         LOG_TAG,
-        serviceName,
+        context.getServiceName(),
         type.name(),
         get(contextPath),
-        get(correlationId),
+        context.getCorrelationId(),
         get(method),
         now.getTime(),
+        get(responseTime),
         get(responseCode));
 
     Logger.log.info(logMessage);

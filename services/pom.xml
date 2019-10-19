@@ -26,7 +26,7 @@
     <dependency>
       <groupId>izbicki.jakub</groupId>
       <artifactId>logging-autoconfiguration</artifactId>
-      <version>0.1.3-SNAPSHOT</version>
+      <version>0.1.4-SNAPSHOT</version>
     </dependency>
 
     <dependency>
