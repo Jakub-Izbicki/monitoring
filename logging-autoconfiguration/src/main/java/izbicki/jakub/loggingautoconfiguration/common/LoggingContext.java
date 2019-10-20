@@ -2,6 +2,7 @@ package izbicki.jakub.loggingautoconfiguration.common;
 
 import static izbicki.jakub.loggingautoconfiguration.common.LoggingConst.CORRELATION_ID;
 import static izbicki.jakub.loggingautoconfiguration.common.LoggingConst.REQUEST_START_TIME;
+import static izbicki.jakub.loggingautoconfiguration.common.LoggingConst.SENDER;
 import static izbicki.jakub.loggingautoconfiguration.common.LoggingConst.SERVICE_RESPONSE_TIME;
 import static izbicki.jakub.loggingautoconfiguration.common.LoggingConst.SUBTRACT_REQUEST_TIME;
 
@@ -57,5 +58,13 @@ public class LoggingContext {
 
   public void setSubtractionRequestTime(long timeMs) {
     props.put(SUBTRACT_REQUEST_TIME.getName(), String.valueOf(timeMs));
+  }
+
+  public void setSender(String senderName) {
+    props.put(SENDER.getName(), senderName);
+  }
+
+  public String getSender() {
+    return props.get(SENDER.getName());
   }
 }

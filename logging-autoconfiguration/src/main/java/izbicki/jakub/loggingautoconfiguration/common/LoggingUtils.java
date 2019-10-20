@@ -19,6 +19,8 @@ import org.springframework.util.StreamUtils;
 
 public class LoggingUtils {
 
+  private static final String SENDER_HEADER = "from";
+
   private final LoggingContext context;
 
   public LoggingUtils(LoggingContext context) {
@@ -27,9 +29,11 @@ public class LoggingUtils {
 
   public void log(HttpServletRequest request) {
     setCorrelationIdIfMissing(request);
+    getSenderHostIfPresent(request);
 
     Logger.log(context,
         HttpMessageType.INCOMING_REQUEST,
+        Optional.ofNullable(context.getSender()),
         Optional.of(request.getRequestURI()),
         Optional.of(request.getMethod()),
         Optional.empty(),
@@ -42,6 +46,7 @@ public class LoggingUtils {
 
     Logger.log(context,
         HttpMessageType.INCOMING_RESPONSE,
+        Optional.ofNullable(context.getSender()),
         Optional.empty(),
         Optional.empty(),
         Optional.of(context.getResponseTime()),
@@ -51,14 +56,17 @@ public class LoggingUtils {
 
   public void log(HttpRequest request, byte[] body) {
     setCorrelationIdIfMissing(request);
+    setSenderHost(request);
 
     Logger.log(context,
         HttpMessageType.OUTCOMING_REQUEST,
+        Optional.empty(),
         Optional.of(request.getURI().toString()),
         Optional.of(request.getMethod().name()),
         Optional.empty(),
         Optional.empty(),
         getBody(body));
+
   }
 
   public void log(ClientHttpResponse response) throws IOException {
@@ -66,6 +74,7 @@ public class LoggingUtils {
 
     Logger.log(context,
         HttpMessageType.OUTCOMING_RESPONSE,
+        Optional.empty(),
         Optional.empty(),
         Optional.empty(),
         Optional.empty(),
@@ -175,5 +184,17 @@ public class LoggingUtils {
     } catch (IOException e) {
       return Optional.empty();
     }
+  }
+
+  private void getSenderHostIfPresent(HttpServletRequest request) {
+    Optional<String> sender = Optional.ofNullable(request.getHeader(SENDER_HEADER));
+    if (sender.isPresent()) {
+      context.setSender(sender.get());
+    }
+
+  }
+
+  private void setSenderHost(HttpRequest request) {
+    request.getHeaders().add(SENDER_HEADER, context.getServiceName());
   }
 }

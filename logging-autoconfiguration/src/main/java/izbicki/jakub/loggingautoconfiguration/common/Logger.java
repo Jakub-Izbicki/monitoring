@@ -12,8 +12,8 @@ public class Logger {
   private static final String LOG_TAG = "autoconfigured-logging";
   private static final int RESPONSE_CODE_SIZE = 3;
 
-  static void log(LoggingContext context, HttpMessageType type, Optional<String> contextPath, Optional<String> method,
-      Optional<String> responseTime, Optional<String> responseCode, Optional<String> body) {
+  static void log(LoggingContext context, HttpMessageType type, Optional<String> sender, Optional<String> contextPath,
+      Optional<String> method, Optional<String> responseTime, Optional<String> responseCode, Optional<String> body) {
 
     Date now = new Date();
 
@@ -22,6 +22,7 @@ public class Logger {
             + "[%s] "
             + "serviceName: [%s] "
             + "type: [%s] "
+            + "from: [%s] "
             + "contextPath: [%s] "
             + "correlationId: [%s] "
             + "method: [%s] "
@@ -33,6 +34,7 @@ public class Logger {
         LOG_TAG,
         context.getServiceName(),
         type.name(),
+        get(sender),
         get(contextPath),
         context.getCorrelationId(),
         get(method),
