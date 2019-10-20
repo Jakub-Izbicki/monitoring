@@ -9,6 +9,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 public class IncomingLoggingInterceptor implements HandlerInterceptor {
 
+  private static final String ERROR_PAGE = "/error";
+
   private final LoggingUtils loggingUtils;
 
   public IncomingLoggingInterceptor(LoggingContext context) {
@@ -17,8 +19,11 @@ public class IncomingLoggingInterceptor implements HandlerInterceptor {
 
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-    loggingUtils.setRequestStart();
-    loggingUtils.log(request);
+    if (!ERROR_PAGE.equals(request.getRequestURI())) {
+      loggingUtils.setRequestStart();
+      loggingUtils.log(request);
+    }
+
     return true;
   }
 
